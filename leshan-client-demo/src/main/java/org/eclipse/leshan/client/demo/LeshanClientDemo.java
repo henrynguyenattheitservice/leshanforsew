@@ -15,26 +15,6 @@
  *******************************************************************************/
 package org.eclipse.leshan.client.demo;
 
-import static org.eclipse.leshan.client.object.Security.noSec;
-import static org.eclipse.leshan.client.object.Security.noSecBootstrap;
-import static org.eclipse.leshan.client.object.Security.oscoreOnly;
-import static org.eclipse.leshan.client.object.Security.oscoreOnlyBootstrap;
-import static org.eclipse.leshan.client.object.Security.psk;
-import static org.eclipse.leshan.client.object.Security.pskBootstrap;
-import static org.eclipse.leshan.client.object.Security.rpk;
-import static org.eclipse.leshan.client.object.Security.rpkBootstrap;
-import static org.eclipse.leshan.client.object.Security.x509;
-import static org.eclipse.leshan.client.object.Security.x509Bootstrap;
-import static org.eclipse.leshan.core.LwM2mId.DEVICE;
-import static org.eclipse.leshan.core.LwM2mId.LOCATION;
-import static org.eclipse.leshan.core.LwM2mId.OSCORE;
-import static org.eclipse.leshan.core.LwM2mId.SECURITY;
-import static org.eclipse.leshan.core.LwM2mId.SERVER;
-
-import java.io.File;
-import java.io.PrintWriter;
-import java.util.List;
-
 import org.eclipse.californium.elements.config.Configuration;
 import org.eclipse.californium.scandium.config.DtlsConfig;
 import org.eclipse.californium.scandium.config.DtlsConnectorConfig;
@@ -67,8 +47,31 @@ import org.eclipse.leshan.core.node.codec.DefaultLwM2mDecoder;
 import org.eclipse.leshan.core.node.codec.DefaultLwM2mEncoder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import picocli.CommandLine;
+
+import java.io.File;
+import java.io.PrintWriter;
+import java.util.List;
+
+import static org.eclipse.leshan.client.object.Security.pskBootstrap;
+import static org.eclipse.leshan.client.object.Security.rpkBootstrap;
+import static org.eclipse.leshan.client.object.Security.x509Bootstrap;
+import static org.eclipse.leshan.client.object.Security.oscoreOnlyBootstrap;
+import static org.eclipse.leshan.client.object.Security.noSecBootstrap;
+import static org.eclipse.leshan.client.object.Security.psk;
+import static org.eclipse.leshan.client.object.Security.rpk;
+import static org.eclipse.leshan.client.object.Security.x509;
+import static org.eclipse.leshan.client.object.Security.oscoreOnly;
+import static org.eclipse.leshan.client.object.Security.noSec;
+
+import static org.eclipse.leshan.core.LwM2mId.OSCORE;
+import static org.eclipse.leshan.core.LwM2mId.SECURITY;
+import static org.eclipse.leshan.core.LwM2mId.SERVER;
+import static org.eclipse.leshan.core.LwM2mId.DEVICE;
+import static org.eclipse.leshan.core.LwM2mId.LOCATION;
+
+
+
 
 public class LeshanClientDemo {
 
@@ -85,6 +88,22 @@ public class LeshanClientDemo {
     private static final int OBJECT_ID_LWM2M_TEST_OBJECT = 3442;
     private static final String CF_CONFIGURATION_FILENAME = "Californium3.client.properties";
     private static final String CF_CONFIGURATION_HEADER = "Leshan Client Demo - " + Configuration.DEFAULT_HEADER;
+
+
+    private static final int APP_DATA_CONTAINER = 10250;
+
+    private static final int INTERVAL_DATA_DELIVERY = 10262;
+    private static final int EVENT_DATA_DELIVERY = 10263;
+    private static final int DELIVERY_SCHEDULE = 10264;
+    private static final int WATER_FLOW_READINGS = 10266;
+    private static final int DAILY_MAXIMUM_FLOW_RATE_READINGS = 10267;
+    private static final int TEMPERATURE_READINGS = 10268;
+    private static final int PRESSURE_READINGS = 10269;
+    private static final int BATTERY_LEVEL_READINGS = 10270;
+    private static final int COMMUNICATION_ACTIVITY_TIME_READINGS = 10271;
+    private static final int LOW_BATTERY_ALARM = 10281;
+    private static final int DEVICE_REBOOT_EVENT = 10282;
+
 
     public static void main(String[] args) {
 
@@ -219,10 +238,34 @@ public class LeshanClientDemo {
             }
         }
         initializer.setInstancesForObject(DEVICE, new MyDevice());
+        initializer.setInstancesForObject(SERVER, new OMA0001Server());
         initializer.setInstancesForObject(LOCATION, locationInstance);
         initializer.setInstancesForObject(OBJECT_ID_TEMPERATURE_SENSOR, new RandomTemperatureSensor());
         initializer.setInstancesForObject(OBJECT_ID_LWM2M_TEST_OBJECT, new LwM2mTestObject());
-
+        OMA10250AppDataContainer appDataContainer = new OMA10250AppDataContainer();
+        initializer.setInstancesForObject(APP_DATA_CONTAINER, appDataContainer);
+        OMA10262IntervalDataDelivery intervalDataDelivery = new OMA10262IntervalDataDelivery();
+        initializer.setInstancesForObject(INTERVAL_DATA_DELIVERY, intervalDataDelivery);
+        OMA10263EventDataDelivery eventDataDelivery = new OMA10263EventDataDelivery();
+        initializer.setInstancesForObject(EVENT_DATA_DELIVERY, eventDataDelivery);
+        OMA10264DeliverySchedule deliverySchedule = new OMA10264DeliverySchedule();
+        initializer.setInstancesForObject(DELIVERY_SCHEDULE, deliverySchedule);
+        OMA10266WaterFlowReadings waterFlowReadings = new OMA10266WaterFlowReadings();
+        initializer.setInstancesForObject(WATER_FLOW_READINGS, waterFlowReadings);
+        OMA10267DailyMaximumFlowRateReadings maximumFlowRateReadings = new OMA10267DailyMaximumFlowRateReadings();
+        initializer.setInstancesForObject(DAILY_MAXIMUM_FLOW_RATE_READINGS, maximumFlowRateReadings);
+        OMA10268TemperatureReadings temperatureReadings = new OMA10268TemperatureReadings();
+        initializer.setInstancesForObject(TEMPERATURE_READINGS, temperatureReadings);
+        OMA10269PressureReadings pressureReadings = new OMA10269PressureReadings();
+        initializer.setInstancesForObject(PRESSURE_READINGS, pressureReadings);
+        OMA10270BatteryLevelReadings batteryLevelReadings = new OMA10270BatteryLevelReadings();
+        initializer.setInstancesForObject(BATTERY_LEVEL_READINGS, batteryLevelReadings);
+        OMA10271CommunicationsActivityTimeReadings communicationsActivityTimeReadings = new OMA10271CommunicationsActivityTimeReadings();
+        initializer.setInstancesForObject(COMMUNICATION_ACTIVITY_TIME_READINGS, communicationsActivityTimeReadings);
+        OMA10281LowBatteryAlarm lowBatteryAlarm = new OMA10281LowBatteryAlarm();
+        initializer.setInstancesForObject(LOW_BATTERY_ALARM, lowBatteryAlarm);
+        OMA10283DeviceRebootEvent deviceRebootEvent = new OMA10283DeviceRebootEvent();
+        initializer.setInstancesForObject(DEVICE_REBOOT_EVENT, deviceRebootEvent);
         List<LwM2mObjectEnabler> enablers = initializer.createAll();
 
         // Configure Registration Engine

@@ -455,6 +455,10 @@ Contributors:
           <artifactId>formatter-maven-plugin</artifactId>
           <!--  stuck to 2.16.0 for java8 compatibility -->
           <version>2.16.0</version>
+          <configuration>
+            <lineEnding>LF</lineEnding>
+            <encoding>UTF-8</encoding>
+          </configuration>
         </plugin>
         <plugin>
           <groupId>org.apache.felix</groupId>

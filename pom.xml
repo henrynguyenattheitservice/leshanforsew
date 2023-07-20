@@ -339,10 +339,6 @@ Contributors:
           <version>3.4.2</version>
         </plugin>
         <plugin>
-          <artifactId>maven-enforcer-plugin</artifactId>
-          <version>3.1.0</version>
-        </plugin>
-        <plugin>
           <artifactId>maven-toolchains-plugin</artifactId>
           <version>3.1.0</version>
         </plugin>
@@ -359,6 +355,13 @@ Contributors:
         <plugin>
           <artifactId>maven-compiler-plugin</artifactId>
           <version>3.10.1</version>
+          <configuration>
+            <encoding>UTF-8</encoding>
+            <source>1.7</source>
+            <target>1.7</target>
+            <debug>true</debug>
+            <optimize>true</optimize>
+          </configuration>
         </plugin>
         <plugin>
           <groupId>com.github.ekryd.sortpom</groupId>
@@ -451,16 +454,6 @@ Contributors:
           </dependencies>
         </plugin>
         <plugin>
-          <groupId>net.revelc.code.formatter</groupId>
-          <artifactId>formatter-maven-plugin</artifactId>
-          <!--  stuck to 2.16.0 for java8 compatibility -->
-          <version>2.16.0</version>
-          <configuration>
-            <lineEnding>LF</lineEnding>
-            <encoding>UTF-8</encoding>
-          </configuration>
-        </plugin>
-        <plugin>
           <groupId>org.apache.felix</groupId>
           <artifactId>maven-bundle-plugin</artifactId>
           <version>5.1.8</version>
@@ -512,26 +505,6 @@ Contributors:
                  with some maven plugin (E.g. maven-source-plugin or maven-javadoc-plugin)
                  See : https://github.com/Ekryd/sortpom/issues/229#issuecomment-1177872634 -->
             <phase>process-sources</phase>
-          </execution>
-        </executions>
-      </plugin>
-      <plugin>
-        <artifactId>maven-enforcer-plugin</artifactId>
-        <configuration>
-          <rules>
-            <requireUpperBoundDeps></requireUpperBoundDeps>
-            <dependencyConvergence></dependencyConvergence>
-            <requireMavenVersion>
-              <version>3.6.0</version>
-            </requireMavenVersion>
-          </rules>
-        </configuration>
-        <executions>
-          <execution>
-            <id>enforce-maven</id>
-            <goals>
-              <goal>enforce</goal>
-            </goals>
           </execution>
         </executions>
       </plugin>

@@ -17,6 +17,7 @@ package org.eclipse.leshan.client.demo;
 import org.eclipse.leshan.client.resource.BaseInstanceEnabler;
 import org.eclipse.leshan.client.servers.ServerIdentity;
 import org.eclipse.leshan.core.node.LwM2mResource;
+import org.eclipse.leshan.core.request.argument.Arguments;
 import org.eclipse.leshan.core.response.ExecuteResponse;
 import org.eclipse.leshan.core.response.ReadResponse;
 import org.eclipse.leshan.core.response.WriteResponse;
@@ -123,7 +124,7 @@ public class OMA10267DailyMaximumFlowRateReadings extends BaseInstanceEnabler {
 
 
     @Override
-    public synchronized ExecuteResponse execute(ServerIdentity identity, int resourceId, String params) {
+    public synchronized ExecuteResponse execute(ServerIdentity identity, int resourceId, Arguments params) {
         LOG.info("Exec on Device Resource " + resourceId);
         switch (resourceId) {
             case INTERVAL_HISTORICAL_READ: // 6008 E
@@ -149,19 +150,19 @@ public class OMA10267DailyMaximumFlowRateReadings extends BaseInstanceEnabler {
     }
 
     @Override
-    public WriteResponse write(ServerIdentity identity, int resourceId, LwM2mResource value) {
+    public WriteResponse write(ServerIdentity identity, boolean replace,  int resourceId, LwM2mResource value) {
         LOG.info("Write on Device Resource " + resourceId);
         switch (resourceId) {
             case DELIVERY_MIDNIGHT_ALIGNED: // 6007 RW
                 setDeliveryMidnightAligned( (boolean) value.getValue());
-                fireResourcesChange(resourceId);
+                fireResourceChange(resourceId);
                 return WriteResponse.success();
             case LAST_DELIVERED_INTERVAL: //6005 RW
                 setLatestRecordedInterval( (Date) value.getValue());
-                fireResourcesChange(resourceId);
+                fireResourceChange(resourceId);
                 return WriteResponse.success();
             default:
-                return super.write(identity, resourceId, value);
+                return super.write(identity, replace, resourceId, value);
         }
     }
 
